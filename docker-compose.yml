@@ -1,0 +1,35 @@
+#version: '3.8'
+
+services:
+  derper:
+    build: .
+#    image: ${DERP_IMAGE}
+    container_name: derper
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${DERP_HTTPS_PORT}:4443"
+      - "${STUN_PORT}:3478/udp"
+    volumes:
+      - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
+      - ./certs:/app/certs
+      - ./data:/var/lib/derper
+      - ./logs:/var/log/derper      # 日志目录
+    environment:
+      - TZ=${TZ}
+      - DERP_HOSTNAME=${DERP_HOSTNAME}
+      - DERP_CERT_MODE=${DERP_CERT_MODE}
+      - DERP_VERIFY_CLIENTS=${DERP_VERIFY_CLIENTS}
+      - DERP_STUN=true
+      - DERP_STUN_PORT=${STUN_PORT}
+    networks:
+      - traefik_net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://localhost:4443/derp"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  traefik_net:
+    driver: bridg
