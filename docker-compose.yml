@@ -1,9 +1,6 @@
-#version: '3.8'
-
 services:
   derper:
     build: .
-#    image: ${DERP_IMAGE}
     container_name: derper
     restart: ${RESTART_POLICY:-unless-stopped}
     ports:
@@ -13,7 +10,7 @@ services:
       - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
       - ./certs:/app/certs
       - ./data:/var/lib/derper
-      - ./logs:/var/log/derper      # 日志目录
+      - ./logs:/var/log/derper
     environment:
       - TZ=${TZ}
       - DERP_HOSTNAME=${DERP_HOSTNAME}
@@ -23,13 +20,23 @@ services:
       - DERP_STUN_PORT=${STUN_PORT}
     networks:
       - traefik_net
+    # 🔧 添加以下命令配置，覆盖镜像的默认启动方式
+    command:
+      - "/app/derper"
+      - "--hostname=${DERP_HOSTNAME}"
+      - "--certmode=${DERP_CERT_MODE}"
+      - "--certdir=/app/certs"
+      - "-a=:4443"
+      - "--stun"
+      - "--stun-port=${STUN_PORT}"
+      - "--verify-clients=${DERP_VERIFY_CLIENTS}"
+
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://localhost:4443/derp"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
 networks:
   traefik_net:
-    driver: bridg
+    external: true
