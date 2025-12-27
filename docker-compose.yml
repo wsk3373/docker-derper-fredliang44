@@ -31,12 +31,6 @@ services:
       - "--stun-port=${STUN_PORT}"
       - "--verify-clients=${DERP_VERIFY_CLIENTS}"
 
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://localhost:4443/derp"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 networks:
   traefik_net:
     external: true
