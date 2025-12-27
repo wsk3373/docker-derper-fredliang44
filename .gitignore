@@ -1,0 +1,57 @@
+# 依赖
+node_modules/
+npm-debug.log*
+
+# 构建
+dist/
+build/
+*.js.map
+*.css.map
+
+# 环境变量
+#.env
+#.env.local
+
+# IDE
+.vscode/
+.idea/
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 依赖目录
+node_modules/
+vendor/
+__pycache__/
+
+# 构建输出
+dist/
+build/
+*.exe
+*.dll
+# 忽略特定文件
+config.json
+secrets.env
+
+# 忽略特定目录
+node_modules/
+dist/
+build/
+.DS_Store
+
+# 忽略特定扩展名
+*.log
+*.tmp
+
+# 忽略目录但保留空目录
+logs/
+!logs/.keep
+
+certs
+data
