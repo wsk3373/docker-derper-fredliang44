@@ -2,10 +2,10 @@ services:
   derper:
     build: .
     container_name: derper
-    restart: ${RESTART_POLICY:-unless-stopped}
+    restart: ${DERP_RESTART_POLICY:-unless-stopped}
     ports:
-      - "${DERP_HTTPS_PORT}:4443"
-      - "${STUN_PORT}:3478/udp"
+      - "${DERP_MAP_HTTPS_PORT}:${DERP_HTTPS_PORT}"
+      - "${DERP_MAP_STUN_PORT}:${DERP_STUN_PORT}/udp"
     volumes:
       - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
       - ./certs:/app/certs
@@ -16,19 +16,19 @@ services:
       - DERP_HOSTNAME=${DERP_HOSTNAME}
       - DERP_CERT_MODE=${DERP_CERT_MODE}
       - DERP_VERIFY_CLIENTS=${DERP_VERIFY_CLIENTS}
-      - DERP_STUN=true
-      - DERP_STUN_PORT=${STUN_PORT}
+      - DERP_STUN=${DERP_STUN}
+      - DERP_STUN_PORT=${DERP_STUN_PORT}
     networks:
       - traefik_net
-    # 🔧 添加以下命令配置，覆盖镜像的默认启动方式
+
     command:
       - "/app/derper"
       - "--hostname=${DERP_HOSTNAME}"
       - "--certmode=${DERP_CERT_MODE}"
       - "--certdir=/app/certs"
-      - "-a=:4443"
+      - "-a=:${DERP_HTTPS_PORT}"
       - "--stun"
-      - "--stun-port=${STUN_PORT}"
+      - "--stun-port=${DERP_STUN_PORT}"
       - "--verify-clients=${DERP_VERIFY_CLIENTS}"
 
 networks:
