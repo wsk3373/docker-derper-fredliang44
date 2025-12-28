@@ -28,10 +28,9 @@ COPY --from=builder /go/bin/derper .
 
 CMD ["/app/derper", \
    "--hostname=$DERP_HOSTNAME", \
-#    "--certmode=$DERP_CERT_MODE", \
-#    "--a=$DERP_HTTPS_PORT", \
    "--stun=$DERP_STUN", \
    "--stun-port=$DERP_STUN_PORT", \
-#    "--http-port=-1", \
    "--verify-clients=$DERP_VERIFY_CLIENTS"]
+#    "--certmode=$DERP_CERT_MODE", \
+#    "--a=$DERP_HTTPS_PORT", \
 
