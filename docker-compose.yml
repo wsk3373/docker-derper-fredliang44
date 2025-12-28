@@ -13,14 +13,8 @@ services:
       - ./logs:/var/log/derper
     environment:
       - TZ=${TZ}
-      # - DERP_HOSTNAME=${DERP_HOSTNAME}
-      # - DERP_CERT_MODE=${DERP_CERT_MODE}
-      # - DERP_VERIFY_CLIENTS=${DERP_VERIFY_CLIENTS}
-      # - DERP_STUN=${DERP_STUN}
-      # - DERP_STUN_PORT=${DERP_STUN_PORT}
     networks:
       - traefik_net
-
     command:
       - "/app/derper"
       - "--hostname=${DERP_HOSTNAME}"
@@ -30,7 +24,6 @@ services:
       - "--verify-clients=${DERP_VERIFY_CLIENTS}"
       - "--certmode=${DERP_CERT_MODE}"
       - "--certdir=/app/certs"
-      # - "--http-port=-1"
 
 networks:
   traefik_net:
